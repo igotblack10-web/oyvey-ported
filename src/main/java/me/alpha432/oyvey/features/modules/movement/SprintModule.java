@@ -11,7 +11,7 @@ public class SprintModule extends Module {
     public void onTick() {
         if (nullCheck()) return;
 
-        if (mc.player.zza != 0 || mc.player.xxa != 0) {
+        if (mc.player.getDeltaMovement().horizontalDistanceSqr() > 0.0001) {
             mc.player.setSprinting(true);
         }
     }
