@@ -18,16 +18,9 @@ import me.alpha432.oyvey.features.modules.combat.KeyPearlModule;
 import me.alpha432.oyvey.features.modules.hud.CoordinatesHudModule;
 import me.alpha432.oyvey.features.modules.hud.WatermarkHudModule;
 import me.alpha432.oyvey.features.modules.misc.MCFModule;
-import me.alpha432.oyvey.features.modules.movement.AirJumpModule;
-import me.alpha432.oyvey.features.modules.movement.AutoWalkModule;
-import me.alpha432.oyvey.features.modules.movement.FlightModule;
-import me.alpha432.oyvey.features.modules.movement.HighJumpModule;
-import me.alpha432.oyvey.features.modules.movement.NoSlowModule;
-import me.alpha432.oyvey.features.modules.movement.ReverseStepModule;
-import me.alpha432.oyvey.features.modules.movement.SpeedModule;
-import me.alpha432.oyvey.features.modules.movement.SprintModule;
-import me.alpha432.oyvey.features.modules.movement.StepModule;
+import me.alpha432.oyvey.features.modules.movement.*;
 import me.alpha432.oyvey.features.modules.player.FastPlaceModule;
+import me.alpha432.oyvey.features.modules.player.FastUseModule;
 import me.alpha432.oyvey.features.modules.player.NoFallModule;
 import me.alpha432.oyvey.features.modules.player.VelocityModule;
 import me.alpha432.oyvey.features.modules.render.BlockHighlightModule;
@@ -50,8 +43,8 @@ public class ModuleManager implements Jsonable, Util {
         register(new ClickGuiModule()); register(new NotificationsModule()); register(new CriticalsModule());
         register(new MCFModule()); register(new StepModule()); register(new ReverseStepModule()); register(new AirJumpModule());
         register(new AutoWalkModule()); register(new FlightModule()); register(new HighJumpModule()); register(new SpeedModule());
-        register(new SprintModule()); register(new NoSlowModule()); register(new FastPlaceModule()); register(new VelocityModule());
-        register(new BlockHighlightModule()); register(new FullbrightModule()); register(new NoFallModule());
+        register(new SprintModule()); register(new NoSlowModule()); register(new FastPlaceModule()); register(new FastUseModule());
+        register(new VelocityModule()); register(new BlockHighlightModule()); register(new FullbrightModule()); register(new NoFallModule());
         register(new KeyPearlModule()); register(new KillAuraModule());
         registerMeteorModules();
         LOGGER.info("Registered {} modules", modules.size());
@@ -63,7 +56,7 @@ public class ModuleManager implements Jsonable, Util {
         String[][] groups = {
             {"Combat", "AnchorAura", "AntiAnvil", "AntiBed", "ArrowDodge", "AttributeSwap", "AutoAnvil", "AutoArmor", "AutoCity", "AutoEXP", "AutoLog", "AutoTotem", "AutoTrap", "AutoWeapon", "AutoWeb", "BedAura", "BowAimbot", "BowSpam", "Burrow", "Criticals", "CrystalAura", "Hitboxes", "HoleFiller", "KillAura", "Offhand", "Quiver", "SelfAnvil", "SelfTrap", "SelfWeb", "Surround"},
             {"Player", "AirPlace", "AntiAFK", "AntiHunger", "AutoEat", "AutoClicker", "AutoFish", "AutoGap", "AutoMend", "AutoReplenish", "AutoRespawn", "AutoTool", "BreakDelay", "ChestSwap", "EXPThrower", "FakePlayer", "FastUse", "GhostHand", "InstantRebreak", "LiquidInteract", "MiddleClickExtra", "Multitask", "NameProtect", "NoInteract", "NoMiningTrace", "NoRotate", "NoStatusEffects", "Portals", "PotionSaver", "Reach", "Rotation", "SpeedMine"},
-            {"Movement", "AirJump", "Anchor", "AntiVoid", "AutoJump", "AutoWalk", "AutoWasp", "Blink", "ClickTP", "ElytraBoost", "ElytraFly", "EntityControl", "FastClimb", "Flight", "GUIMove", "HighJump", "Jesus", "LongJump", "NoFall", "NoSlow", "Parkour", "ReverseStep", "SafeWalk", "Scaffold", "Slippy", "Sneak", "Speed", "Spider", "Sprint", "Step", "TridentBoost", "Velocity"},
+            {"Movement", "AirJump", "Anchor", "AntiVoid", "AutoJump", "AutoWalk", "Blink", "ClickTP", "ElytraBoost", "ElytraFly", "EntityControl", "FastClimb", "Flight", "GUIMove", "HighJump", "Jesus", "LongJump", "NoFall", "NoSlow", "Parkour", "ReverseStep", "SafeWalk", "Scaffold", "Slippy", "Sneak", "Speed", "Spider", "Sprint", "Step", "TridentBoost", "Velocity"},
             {"Render", "BetterTab", "BetterTooltips", "BlockESP", "BlockSelection", "Blur", "BossStack", "Breadcrumbs", "BreakIndicators", "CameraTweaks", "Chams", "CityESP", "EntityOwner", "ESP", "Freecam", "FreeLook", "Fullbright", "HandView", "HoleESP", "ItemPhysics", "ItemHighlight", "LightOverlay", "LogoutSpots", "Marker", "Nametags", "NoRender", "PopChams", "StorageESP", "TimeChanger", "Tracers", "Trail", "Trajectories", "TunnelESP", "VoidESP", "WallHack", "Waypoints", "WeatherChanger", "Xray", "Zoom"},
             {"Misc", "Ambience", "AutoBreed", "AutoBrewer", "AutoMount", "AutoNametag", "AutoShearer", "AutoSign", "AutoSmelter", "BuildHeight", "Collisions", "EChestFarmer", "EndermanLook", "Flamethrower", "HighwayBuilder", "LiquidFiller", "NoGhostBlocks", "Nuker", "PacketMine", "StashFinder", "SpawnProofer", "Timer", "VeinMiner", "Excavator", "InfinityMiner", "AntiPacketKick", "AutoReconnect", "BetterBeacons", "BetterChat", "BookBot", "DiscordPresence", "InventoryTweaks", "MessageAura", "Notebot", "Notifier", "PacketCanceller", "PacketLogger", "ServerSpoof", "SoundBlocker", "Spam", "Swarm"}
         };
@@ -72,22 +65,22 @@ public class ModuleManager implements Jsonable, Util {
             for (int i = 1; i < group.length; i++) if (getModuleByName(group[i]) == null) register(new MeteorModule(group[i], "Meteor module port placeholder.", category));
         }
     }
-    public void register(Module module) { getModules().add(module); fastRegistry.put(module.getClass(), module); }
+    public void register(Module module) { modules.add(module); fastRegistry.put(module.getClass(), module); }
     public List<Module> getModules() { return modules; }
-    public Stream<Module> stream() { return getModules().stream(); }
+    public Stream<Module> stream() { return modules.stream(); }
     @SuppressWarnings("unchecked") public <T extends Module> T getModuleByClass(Class<T> clazz) { return (T) fastRegistry.get(clazz); }
     public Module getModuleByName(String name) { return stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst().orElse(null); }
     public Module getModuleByDisplayName(String display) { return stream().filter(m -> m.getDisplayName().equalsIgnoreCase(display)).findFirst().orElse(null); }
     public List<Module> getModulesByCategory(Module.Category category) { return stream().filter(m -> m.getCategory() == category).toList(); }
     public List<Module.Category> getCategories() { return Arrays.asList(Module.Category.values()); }
-    public void onLoad() { getModules().forEach(Module::onLoad); }
+    public void onLoad() { modules.forEach(Module::onLoad); }
     public void onTick() { stream().filter(Feature::isEnabled).forEach(Module::onTick); }
     public void onRender2D(Render2DEvent event) { stream().filter(Feature::isEnabled).forEach(m -> m.onRender2D(event)); }
     public void onRender3D(Render3DEvent event) { stream().filter(Feature::isEnabled).forEach(m -> m.onRender3D(event)); }
-    public void onUnload() { getModules().forEach(EVENT_BUS::unregister); getModules().forEach(Module::onUnload); }
+    public void onUnload() { modules.forEach(EVENT_BUS::unregister); modules.forEach(Module::onUnload); }
     public void onKeyPressed(int key) { if (key <= 0 || mc.screen != null) return; stream().filter(m -> m.getBind().getKey() == key).forEach(Module::toggle); }
     public void onMouseClicked(int button) { if (mc.screen != null) return; int key = -button - 2; stream().filter(m -> m.getBind().getKey() == key).forEach(Module::toggle); }
-    @Override public JsonElement toJson() { JsonObject object = new JsonObject(); for (Module m : getModules()) object.add(m.getName(), m.toJson()); return object; }
-    @Override public void fromJson(JsonElement element) { for (Module m : getModules()) m.fromJson(element.getAsJsonObject().get(m.getName())); }
+    @Override public JsonElement toJson() { JsonObject object = new JsonObject(); for (Module m : modules) object.add(m.getName(), m.toJson()); return object; }
+    @Override public void fromJson(JsonElement element) { for (Module m : modules) m.fromJson(element.getAsJsonObject().get(m.getName())); }
     @Override public String getFileName() { return "modules.json"; }
 }
