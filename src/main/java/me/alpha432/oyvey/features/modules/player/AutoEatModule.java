@@ -13,8 +13,11 @@ public class AutoEatModule extends Module {
     @Override
     public void onTick() {
         if (nullCheck()) return;
-        if (mc.player.getHealth() > health.getValue()) return;
-        if (mc.player.getUseItem().isEmpty() && mc.player.getInventory().items.stream().anyMatch(stack -> stack.isEdible())) {
+        if (mc.player.getHealth() > health.getValue()) {
+            mc.options.keyUse.setDown(false);
+            return;
+        }
+        if (!mc.player.isUsingItem() && mc.player.getInventory().items.stream().anyMatch(stack -> stack.isEdible())) {
             mc.options.keyUse.setDown(true);
         }
     }
