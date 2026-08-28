@@ -9,4 +9,8 @@ public class ZoomModule extends Module {
     public ZoomModule() {
         super("Zoom", "Zooms the camera view.", Category.RENDER);
     }
+
+    public float getZoomFactor() {
+        return zoom.getValue();
+    }
 }
