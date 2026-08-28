@@ -22,6 +22,7 @@ import me.alpha432.oyvey.features.modules.movement.AirJumpModule;
 import me.alpha432.oyvey.features.modules.movement.AutoWalkModule;
 import me.alpha432.oyvey.features.modules.movement.FlightModule;
 import me.alpha432.oyvey.features.modules.movement.HighJumpModule;
+import me.alpha432.oyvey.features.modules.movement.NoSlowModule;
 import me.alpha432.oyvey.features.modules.movement.ReverseStepModule;
 import me.alpha432.oyvey.features.modules.movement.SpeedModule;
 import me.alpha432.oyvey.features.modules.movement.SprintModule;
@@ -59,6 +60,7 @@ public class ModuleManager implements Jsonable, Util {
         register(new HighJumpModule());
         register(new SpeedModule());
         register(new SprintModule());
+        register(new NoSlowModule());
         register(new FastPlaceModule());
         register(new VelocityModule());
         register(new BlockHighlightModule());
@@ -69,11 +71,7 @@ public class ModuleManager implements Jsonable, Util {
         registerMeteorModules();
 
         LOGGER.info("Registered {} modules", modules.size());
-
-        for (Module module : modules) {
-            OyVey.commandManager.register(new ModuleCommand(module));
-        }
-
+        for (Module module : modules) OyVey.commandManager.register(new ModuleCommand(module));
         OyVey.configManager.addConfig(this);
     }
 
@@ -94,27 +92,17 @@ public class ModuleManager implements Jsonable, Util {
                 case "Render" -> Module.Category.RENDER;
                 default -> Module.Category.MISC;
             };
-
             for (int i = 1; i < group.length; i++) {
                 String name = group[i];
-                if (getModuleByName(name) == null) {
-                    register(new MeteorModule(name, "Meteor module port placeholder.", category));
-                }
+                if (getModuleByName(name) == null) register(new MeteorModule(name, "Meteor module port placeholder.", category));
             }
         }
     }
 
-    public void register(Module module) {
-        getModules().add(module);
-        fastRegistry.put(module.getClass(), module);
-    }
-
+    public void register(Module module) { getModules().add(module); fastRegistry.put(module.getClass(), module); }
     public List<Module> getModules() { return modules; }
     public Stream<Module> stream() { return getModules().stream(); }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Module> T getModuleByClass(Class<T> clazz) { return (T) fastRegistry.get(clazz); }
-
+    @SuppressWarnings("unchecked") public <T extends Module> T getModuleByClass(Class<T> clazz) { return (T) fastRegistry.get(clazz); }
     public Module getModuleByName(String name) { return stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst().orElse(null); }
     public Module getModuleByDisplayName(String display) { return stream().filter(m -> m.getDisplayName().equalsIgnoreCase(display)).findFirst().orElse(null); }
     public List<Module> getModulesByCategory(Module.Category category) { return stream().filter(m -> m.getCategory() == category).toList(); }
@@ -124,30 +112,9 @@ public class ModuleManager implements Jsonable, Util {
     public void onRender2D(Render2DEvent event) { stream().filter(Feature::isEnabled).forEach(module -> module.onRender2D(event)); }
     public void onRender3D(Render3DEvent event) { stream().filter(Feature::isEnabled).forEach(module -> module.onRender3D(event)); }
     public void onUnload() { getModules().forEach(EVENT_BUS::unregister); getModules().forEach(Module::onUnload); }
-
-    public void onKeyPressed(int key) {
-        if (key <= 0 || mc.screen != null) return;
-        stream().filter(module -> module.getBind().getKey() == key).forEach(Module::toggle);
-    }
-
-    public void onMouseClicked(int button) {
-        if (mc.screen != null) return;
-        int key = -button - 2;
-        stream().filter(module -> module.getBind().getKey() == key).forEach(Module::toggle);
-    }
-
-    @Override
-    public JsonElement toJson() {
-        JsonObject object = new JsonObject();
-        for (Module module : getModules()) object.add(module.getName(), module.toJson());
-        return object;
-    }
-
-    @Override
-    public void fromJson(JsonElement element) {
-        for (Module module : getModules()) module.fromJson(element.getAsJsonObject().get(module.getName()));
-    }
-
-    @Override
-    public String getFileName() { return "modules.json"; }
+    public void onKeyPressed(int key) { if (key <= 0 || mc.screen != null) return; stream().filter(module -> module.getBind().getKey() == key).forEach(Module::toggle); }
+    public void onMouseClicked(int button) { if (mc.screen != null) return; int key = -button - 2; stream().filter(module -> module.getBind().getKey() == key).forEach(Module::toggle); }
+    @Override public JsonElement toJson() { JsonObject object = new JsonObject(); for (Module module : getModules()) object.add(module.getName(), module.toJson()); return object; }
+    @Override public void fromJson(JsonElement element) { for (Module module : getModules()) module.fromJson(element.getAsJsonObject().get(module.getName())); }
+    @Override public String getFileName() { return "modules.json"; }
 }
