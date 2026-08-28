@@ -39,10 +39,9 @@ public class ModuleManager implements Jsonable, Util {
         register(new ClickGuiModule()); register(new NotificationsModule()); register(new CriticalsModule()); register(new MCFModule());
         register(new StepModule()); register(new ReverseStepModule()); register(new AirJumpModule()); register(new AutoWalkModule());
         register(new FlightModule()); register(new HighJumpModule()); register(new SpeedModule()); register(new SprintModule()); register(new NoSlowModule());
-        register(new FastPlaceModule()); register(new FastUseModule()); register(new AutoRespawnModule()); register(new AntiHungerModule());
+        register(new FastPlaceModule()); register(new FastUseModule()); register(new AutoRespawnModule()); register(new AntiHungerModule()); register(new AutoToolModule());
         register(new VelocityModule()); register(new BlockHighlightModule()); register(new FullbrightModule()); register(new NoFallModule());
-        register(new KeyPearlModule()); register(new KillAuraModule());
-        registerMeteorModules();
+        register(new KeyPearlModule()); register(new KillAuraModule()); registerMeteorModules();
         LOGGER.info("Registered {} modules", modules.size());
         for (Module module : modules) OyVey.commandManager.register(new ModuleCommand(module));
         OyVey.configManager.addConfig(this);
@@ -51,7 +50,7 @@ public class ModuleManager implements Jsonable, Util {
     private void registerMeteorModules() {
         String[][] groups = {
             {"Combat", "AnchorAura", "AntiAnvil", "AntiBed", "ArrowDodge", "AttributeSwap", "AutoAnvil", "AutoArmor", "AutoCity", "AutoEXP", "AutoLog", "AutoTotem", "AutoTrap", "AutoWeapon", "AutoWeb", "BedAura", "BowAimbot", "BowSpam", "Burrow", "CrystalAura", "Hitboxes", "HoleFiller", "Offhand", "Quiver", "SelfAnvil", "SelfTrap", "SelfWeb", "Surround"},
-            {"Player", "AirPlace", "AntiAFK", "AutoEat", "AutoClicker", "AutoFish", "AutoGap", "AutoMend", "AutoReplenish", "AutoTool", "BreakDelay", "ChestSwap", "EXPThrower", "FakePlayer", "GhostHand", "InstantRebreak", "LiquidInteract", "MiddleClickExtra", "Multitask", "NameProtect", "NoInteract", "NoMiningTrace", "NoRotate", "NoStatusEffects", "Portals", "PotionSaver", "Reach", "Rotation", "SpeedMine"},
+            {"Player", "AirPlace", "AntiAFK", "AutoEat", "AutoClicker", "AutoFish", "AutoGap", "AutoMend", "AutoReplenish", "BreakDelay", "ChestSwap", "EXPThrower", "FakePlayer", "GhostHand", "InstantRebreak", "LiquidInteract", "MiddleClickExtra", "Multitask", "NameProtect", "NoInteract", "NoMiningTrace", "NoRotate", "NoStatusEffects", "Portals", "PotionSaver", "Reach", "Rotation", "SpeedMine"},
             {"Movement", "Anchor", "AntiVoid", "AutoJump", "Blink", "ClickTP", "ElytraBoost", "ElytraFly", "EntityControl", "FastClimb", "GUIMove", "Jesus", "LongJump", "Parkour", "SafeWalk", "Scaffold", "Slippy", "Sneak", "Spider", "TridentBoost"},
             {"Render", "BetterTab", "BetterTooltips", "BlockESP", "BlockSelection", "Blur", "BossStack", "Breadcrumbs", "BreakIndicators", "CameraTweaks", "Chams", "CityESP", "EntityOwner", "ESP", "Freecam", "FreeLook", "HandView", "HoleESP", "ItemPhysics", "ItemHighlight", "LightOverlay", "LogoutSpots", "Marker", "Nametags", "NoRender", "PopChams", "StorageESP", "TimeChanger", "Tracers", "Trail", "Trajectories", "TunnelESP", "VoidESP", "WallHack", "Waypoints", "WeatherChanger", "Xray", "Zoom"},
             {"Misc", "Ambience", "AutoBreed", "AutoBrewer", "AutoMount", "AutoNametag", "AutoShearer", "AutoSign", "AutoSmelter", "BuildHeight", "Collisions", "EChestFarmer", "EndermanLook", "Flamethrower", "HighwayBuilder", "LiquidFiller", "NoGhostBlocks", "Nuker", "PacketMine", "StashFinder", "SpawnProofer", "Timer", "VeinMiner", "Excavator", "InfinityMiner", "AntiPacketKick", "AutoReconnect", "BetterBeacons", "BetterChat", "BookBot", "DiscordPresence", "InventoryTweaks", "MessageAura", "Notebot", "Notifier", "PacketCanceller", "PacketLogger", "ServerSpoof", "SoundBlocker", "Spam", "Swarm"}
@@ -61,7 +60,6 @@ public class ModuleManager implements Jsonable, Util {
             for (int i = 1; i < group.length; i++) if (getModuleByName(group[i]) == null) register(new MeteorModule(group[i], "Meteor module port placeholder.", category));
         }
     }
-
     public void register(Module module) { modules.add(module); fastRegistry.put(module.getClass(), module); }
     public List<Module> getModules() { return modules; }
     public Stream<Module> stream() { return modules.stream(); }
