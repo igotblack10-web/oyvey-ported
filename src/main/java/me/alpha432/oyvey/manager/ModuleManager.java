@@ -7,30 +7,25 @@ import me.alpha432.oyvey.event.impl.render.Render2DEvent;
 import me.alpha432.oyvey.event.impl.render.Render3DEvent;
 import me.alpha432.oyvey.features.Feature;
 import me.alpha432.oyvey.features.commands.ModuleCommand;
-import me.alpha432.oyvey.features.modules.MeteorModule;
 import me.alpha432.oyvey.features.modules.Module;
+import me.alpha432.oyvey.features.modules.MeteorModule;
 import me.alpha432.oyvey.features.modules.client.ClickGuiModule;
 import me.alpha432.oyvey.features.modules.client.HudEditorModule;
 import me.alpha432.oyvey.features.modules.client.NotificationsModule;
-import me.alpha432.oyvey.features.modules.combat.KillAuraModule;
 import me.alpha432.oyvey.features.modules.combat.CriticalsModule;
 import me.alpha432.oyvey.features.modules.combat.KeyPearlModule;
+import me.alpha432.oyvey.features.modules.combat.KillAuraModule;
 import me.alpha432.oyvey.features.modules.hud.CoordinatesHudModule;
 import me.alpha432.oyvey.features.modules.hud.WatermarkHudModule;
 import me.alpha432.oyvey.features.modules.misc.MCFModule;
 import me.alpha432.oyvey.features.modules.movement.*;
-import me.alpha432.oyvey.features.modules.player.AutoRespawnModule;
-import me.alpha432.oyvey.features.modules.player.FastPlaceModule;
-import me.alpha432.oyvey.features.modules.player.FastUseModule;
-import me.alpha432.oyvey.features.modules.player.NoFallModule;
-import me.alpha432.oyvey.features.modules.player.VelocityModule;
+import me.alpha432.oyvey.features.modules.player.*;
 import me.alpha432.oyvey.features.modules.render.BlockHighlightModule;
 import me.alpha432.oyvey.features.modules.render.FullbrightModule;
 import me.alpha432.oyvey.util.traits.Jsonable;
 import me.alpha432.oyvey.util.traits.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -41,12 +36,12 @@ public class ModuleManager implements Jsonable, Util {
 
     public void init() {
         register(new WatermarkHudModule()); register(new CoordinatesHudModule()); register(new HudEditorModule());
-        register(new ClickGuiModule()); register(new NotificationsModule()); register(new CriticalsModule());
-        register(new MCFModule()); register(new StepModule()); register(new ReverseStepModule()); register(new AirJumpModule());
-        register(new AutoWalkModule()); register(new FlightModule()); register(new HighJumpModule()); register(new SpeedModule());
-        register(new SprintModule()); register(new NoSlowModule()); register(new FastPlaceModule()); register(new FastUseModule());
-        register(new AutoRespawnModule()); register(new VelocityModule()); register(new BlockHighlightModule());
-        register(new FullbrightModule()); register(new NoFallModule()); register(new KeyPearlModule()); register(new KillAuraModule());
+        register(new ClickGuiModule()); register(new NotificationsModule()); register(new CriticalsModule()); register(new MCFModule());
+        register(new StepModule()); register(new ReverseStepModule()); register(new AirJumpModule()); register(new AutoWalkModule());
+        register(new FlightModule()); register(new HighJumpModule()); register(new SpeedModule()); register(new SprintModule()); register(new NoSlowModule());
+        register(new FastPlaceModule()); register(new FastUseModule()); register(new AutoRespawnModule()); register(new AntiHungerModule());
+        register(new VelocityModule()); register(new BlockHighlightModule()); register(new FullbrightModule()); register(new NoFallModule());
+        register(new KeyPearlModule()); register(new KillAuraModule());
         registerMeteorModules();
         LOGGER.info("Registered {} modules", modules.size());
         for (Module module : modules) OyVey.commandManager.register(new ModuleCommand(module));
@@ -55,10 +50,10 @@ public class ModuleManager implements Jsonable, Util {
 
     private void registerMeteorModules() {
         String[][] groups = {
-            {"Combat", "AnchorAura", "AntiAnvil", "AntiBed", "ArrowDodge", "AttributeSwap", "AutoAnvil", "AutoArmor", "AutoCity", "AutoEXP", "AutoLog", "AutoTotem", "AutoTrap", "AutoWeapon", "AutoWeb", "BedAura", "BowAimbot", "BowSpam", "Burrow", "Criticals", "CrystalAura", "Hitboxes", "HoleFiller", "KillAura", "Offhand", "Quiver", "SelfAnvil", "SelfTrap", "SelfWeb", "Surround"},
-            {"Player", "AirPlace", "AntiAFK", "AntiHunger", "AutoEat", "AutoClicker", "AutoFish", "AutoGap", "AutoMend", "AutoReplenish", "AutoRespawn", "AutoTool", "BreakDelay", "ChestSwap", "EXPThrower", "FakePlayer", "FastUse", "GhostHand", "InstantRebreak", "LiquidInteract", "MiddleClickExtra", "Multitask", "NameProtect", "NoInteract", "NoMiningTrace", "NoRotate", "NoStatusEffects", "Portals", "PotionSaver", "Reach", "Rotation", "SpeedMine"},
-            {"Movement", "AirJump", "Anchor", "AntiVoid", "AutoJump", "AutoWalk", "Blink", "ClickTP", "ElytraBoost", "ElytraFly", "EntityControl", "FastClimb", "Flight", "GUIMove", "HighJump", "Jesus", "LongJump", "NoFall", "NoSlow", "Parkour", "ReverseStep", "SafeWalk", "Scaffold", "Slippy", "Sneak", "Speed", "Spider", "Sprint", "Step", "TridentBoost", "Velocity"},
-            {"Render", "BetterTab", "BetterTooltips", "BlockESP", "BlockSelection", "Blur", "BossStack", "Breadcrumbs", "BreakIndicators", "CameraTweaks", "Chams", "CityESP", "EntityOwner", "ESP", "Freecam", "FreeLook", "Fullbright", "HandView", "HoleESP", "ItemPhysics", "ItemHighlight", "LightOverlay", "LogoutSpots", "Marker", "Nametags", "NoRender", "PopChams", "StorageESP", "TimeChanger", "Tracers", "Trail", "Trajectories", "TunnelESP", "VoidESP", "WallHack", "Waypoints", "WeatherChanger", "Xray", "Zoom"},
+            {"Combat", "AnchorAura", "AntiAnvil", "AntiBed", "ArrowDodge", "AttributeSwap", "AutoAnvil", "AutoArmor", "AutoCity", "AutoEXP", "AutoLog", "AutoTotem", "AutoTrap", "AutoWeapon", "AutoWeb", "BedAura", "BowAimbot", "BowSpam", "Burrow", "CrystalAura", "Hitboxes", "HoleFiller", "Offhand", "Quiver", "SelfAnvil", "SelfTrap", "SelfWeb", "Surround"},
+            {"Player", "AirPlace", "AntiAFK", "AutoEat", "AutoClicker", "AutoFish", "AutoGap", "AutoMend", "AutoReplenish", "AutoTool", "BreakDelay", "ChestSwap", "EXPThrower", "FakePlayer", "GhostHand", "InstantRebreak", "LiquidInteract", "MiddleClickExtra", "Multitask", "NameProtect", "NoInteract", "NoMiningTrace", "NoRotate", "NoStatusEffects", "Portals", "PotionSaver", "Reach", "Rotation", "SpeedMine"},
+            {"Movement", "Anchor", "AntiVoid", "AutoJump", "Blink", "ClickTP", "ElytraBoost", "ElytraFly", "EntityControl", "FastClimb", "GUIMove", "Jesus", "LongJump", "Parkour", "SafeWalk", "Scaffold", "Slippy", "Sneak", "Spider", "TridentBoost"},
+            {"Render", "BetterTab", "BetterTooltips", "BlockESP", "BlockSelection", "Blur", "BossStack", "Breadcrumbs", "BreakIndicators", "CameraTweaks", "Chams", "CityESP", "EntityOwner", "ESP", "Freecam", "FreeLook", "HandView", "HoleESP", "ItemPhysics", "ItemHighlight", "LightOverlay", "LogoutSpots", "Marker", "Nametags", "NoRender", "PopChams", "StorageESP", "TimeChanger", "Tracers", "Trail", "Trajectories", "TunnelESP", "VoidESP", "WallHack", "Waypoints", "WeatherChanger", "Xray", "Zoom"},
             {"Misc", "Ambience", "AutoBreed", "AutoBrewer", "AutoMount", "AutoNametag", "AutoShearer", "AutoSign", "AutoSmelter", "BuildHeight", "Collisions", "EChestFarmer", "EndermanLook", "Flamethrower", "HighwayBuilder", "LiquidFiller", "NoGhostBlocks", "Nuker", "PacketMine", "StashFinder", "SpawnProofer", "Timer", "VeinMiner", "Excavator", "InfinityMiner", "AntiPacketKick", "AutoReconnect", "BetterBeacons", "BetterChat", "BookBot", "DiscordPresence", "InventoryTweaks", "MessageAura", "Notebot", "Notifier", "PacketCanceller", "PacketLogger", "ServerSpoof", "SoundBlocker", "Spam", "Swarm"}
         };
         for (String[] group : groups) {
@@ -66,6 +61,7 @@ public class ModuleManager implements Jsonable, Util {
             for (int i = 1; i < group.length; i++) if (getModuleByName(group[i]) == null) register(new MeteorModule(group[i], "Meteor module port placeholder.", category));
         }
     }
+
     public void register(Module module) { modules.add(module); fastRegistry.put(module.getClass(), module); }
     public List<Module> getModules() { return modules; }
     public Stream<Module> stream() { return modules.stream(); }
