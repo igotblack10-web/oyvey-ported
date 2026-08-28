@@ -18,6 +18,8 @@ import me.alpha432.oyvey.features.modules.combat.KeyPearlModule;
 import me.alpha432.oyvey.features.modules.hud.CoordinatesHudModule;
 import me.alpha432.oyvey.features.modules.hud.WatermarkHudModule;
 import me.alpha432.oyvey.features.modules.misc.MCFModule;
+import me.alpha432.oyvey.features.modules.movement.AirJumpModule;
+import me.alpha432.oyvey.features.modules.movement.FlightModule;
 import me.alpha432.oyvey.features.modules.movement.ReverseStepModule;
 import me.alpha432.oyvey.features.modules.movement.SpeedModule;
 import me.alpha432.oyvey.features.modules.movement.SprintModule;
@@ -49,6 +51,8 @@ public class ModuleManager implements Jsonable, Util {
         register(new MCFModule());
         register(new StepModule());
         register(new ReverseStepModule());
+        register(new AirJumpModule());
+        register(new FlightModule());
         register(new SpeedModule());
         register(new SprintModule());
         register(new FastPlaceModule());
