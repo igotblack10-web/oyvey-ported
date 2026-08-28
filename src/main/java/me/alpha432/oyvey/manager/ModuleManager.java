@@ -19,6 +19,7 @@ import me.alpha432.oyvey.features.modules.hud.CoordinatesHudModule;
 import me.alpha432.oyvey.features.modules.hud.WatermarkHudModule;
 import me.alpha432.oyvey.features.modules.misc.MCFModule;
 import me.alpha432.oyvey.features.modules.movement.*;
+import me.alpha432.oyvey.features.modules.player.AutoRespawnModule;
 import me.alpha432.oyvey.features.modules.player.FastPlaceModule;
 import me.alpha432.oyvey.features.modules.player.FastUseModule;
 import me.alpha432.oyvey.features.modules.player.NoFallModule;
@@ -44,8 +45,8 @@ public class ModuleManager implements Jsonable, Util {
         register(new MCFModule()); register(new StepModule()); register(new ReverseStepModule()); register(new AirJumpModule());
         register(new AutoWalkModule()); register(new FlightModule()); register(new HighJumpModule()); register(new SpeedModule());
         register(new SprintModule()); register(new NoSlowModule()); register(new FastPlaceModule()); register(new FastUseModule());
-        register(new VelocityModule()); register(new BlockHighlightModule()); register(new FullbrightModule()); register(new NoFallModule());
-        register(new KeyPearlModule()); register(new KillAuraModule());
+        register(new AutoRespawnModule()); register(new VelocityModule()); register(new BlockHighlightModule());
+        register(new FullbrightModule()); register(new NoFallModule()); register(new KeyPearlModule()); register(new KillAuraModule());
         registerMeteorModules();
         LOGGER.info("Registered {} modules", modules.size());
         for (Module module : modules) OyVey.commandManager.register(new ModuleCommand(module));
